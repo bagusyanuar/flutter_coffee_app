@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_coffee_app/component/button-menu.dart';
 import 'package:flutter_coffee_app/component/top-navbar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -16,7 +17,29 @@ class _DashboardState extends State<Dashboard> {
             height: 70,
             backgroundColor: Colors.white,
             color: Colors.black,
-          )
+          ),
+          Expanded(
+            child: Center(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ButtonMenu(
+                  url: "assets/order.png",
+                  name: "Pesanan Baru",
+                  redirect: "/order",
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ButtonMenu(
+                  url: "assets/invoice.png",
+                  name: "Tagihan",
+                  redirect: "/invoice",
+                ),
+              ],
+            )),
+          ),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_coffee_app/controller/login.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -16,11 +17,13 @@ class _LoginViewState extends State<LoginView> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: Container(
-                  height: 65,
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 120,
+                  width: 120,
                   margin: EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -67,13 +70,13 @@ class _LoginViewState extends State<LoginView> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: GestureDetector(
                   onTap: () {
-                    // login(context);
+                    _login(context);
                   },
                   child: Container(
                     height: 60,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.red[400]),
+                        color: Colors.brown),
                     child: Center(
                       child: Text(
                         "Login",
@@ -91,5 +94,12 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  void _login(BuildContext context) {
+    Map<String, String> _data = {"username": username, "password": password};
+    // Login(_data, context);
+    Navigator.pushNamedAndRemoveUntil(
+        context, "/dashboard", ModalRoute.withName("/dashboard"));
   }
 }

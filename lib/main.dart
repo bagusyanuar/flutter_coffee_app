@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_coffee_app/view/dashboard.dart';
 import 'package:flutter_coffee_app/view/login.dart';
+import 'package:flutter_coffee_app/view/splash.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,8 +18,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginView(),
-        'dashboard': (context) => Dashboard()
+        '/': (context) => SplashScreen(),
+        '/login': (context) => LoginView(),
+        '/dashboard': (context) => Dashboard()
       },
     );
   }

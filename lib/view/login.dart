@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: GestureDetector(
                   onTap: () {
-                    // login(context);
+                    _login(context);
                   },
                   child: Container(
                     height: 60,
@@ -93,4 +93,10 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+  void _login(BuildContext context) {
+    Map<String, String> _data = {"username": username, "password": password};
+    // Login(_data, context);
+    Navigator.pushNamedAndRemoveUntil(
+        context, "/dashboard", ModalRoute.withName("/dashboard"));
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_coffee_app/controller/login.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -16,11 +17,13 @@ class _LoginViewState extends State<LoginView> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: Container(
-                  height: 65,
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 120,
+                  width: 120,
                   margin: EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -73,7 +76,7 @@ class _LoginViewState extends State<LoginView> {
                     height: 60,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.red[400]),
+                        color: Colors.brown),
                     child: Center(
                       child: Text(
                         "Login",

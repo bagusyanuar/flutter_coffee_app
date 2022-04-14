@@ -59,22 +59,6 @@ class _OrderViewState extends State<OrderView>
                               ))
                           .toList(),
                 ),
-          // Expanded(
-          //   child: Container(),
-          // child: TabBarView(
-          //   children: [
-          //     Container(child: Center(child: Text('people'))),
-          //     Text('Person'),
-          //     Text('Person'),
-          //     Text('Person'),
-          //     Container(child: Center(child: Text('people'))),
-          //     Text('Person'),
-          //     Text('Person'),
-          //     Text('Person'),
-          //   ],
-          //   controller: _tabController,
-          // ),
-          // ),
         ],
       ),
     );
@@ -105,5 +89,9 @@ class _OrderViewState extends State<OrderView>
       int index = _tabController?.index ?? 0;
       print(_tabList[index]);
     }
+  }
+
+  void _getMenuByCategory(int id) async {
+    
   }
 }

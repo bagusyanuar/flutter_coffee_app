@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_coffee_app/helper/static_variable.dart';
 
-Future<List<dynamic>> GetMenuByCategory(int id) async {
+Future<List<dynamic>> getMenuByCategory(int id) async {
   List<dynamic> _results = [];
   String url = '$HostAddress/menu/category/$id';
   try {

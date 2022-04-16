@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_coffee_app/component/card-menu.dart';
+import 'package:flutter_coffee_app/component/detail-order.dart';
 import 'package:flutter_coffee_app/component/page-loading.dart';
 import 'package:flutter_coffee_app/component/top-navbar.dart';
+import 'package:flutter_coffee_app/controller/cart.dart';
 import 'package:flutter_coffee_app/controller/categories.dart';
 import 'package:flutter_coffee_app/controller/menu.dart';
 
@@ -19,8 +21,15 @@ class _OrderViewState extends State<OrderView>
   TabController? _tabController;
   bool isLoading = true;
   bool isLoadingMenu = false;
+  bool isCartAvailable = false;
   List<Map<String, dynamic>> _tabList = [];
   List<Map<String, dynamic>> _menuList = [];
+  int qty = 0;
+  TextEditingController _textEditingController = TextEditingController()
+    ..text = '0';
+  TextEditingController _textAdditionController = TextEditingController()
+    ..text = '';
+  String addition = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -34,6 +43,8 @@ class _OrderViewState extends State<OrderView>
     if (_tabController != null) {
       _tabController?.dispose();
     }
+    _textEditingController.dispose();
+    _textAdditionController.dispose();
     super.dispose();
   }
 
@@ -50,68 +61,90 @@ class _OrderViewState extends State<OrderView>
           isLoading
               ? Expanded(child: PageLoading())
               : Expanded(
-                  child: Column(
+                  child: Stack(
                     children: [
-                      TabBar(
-                        unselectedLabelColor: Colors.black,
-                        labelColor: Colors.red,
-                        controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        isScrollable: true,
-                        tabs: _tabList.length <= 0
-                            ? []
-                            : _tabList
-                                .map((e) => Tab(
-                                      text: e["name"].toString(),
-                                    ))
-                                .toList(),
-                      ),
-                      isLoadingMenu
-                          ? Expanded(
-                              child: PageLoading(
-                              text: "Mengambil Data Menu...",
-                            ))
-                          : Expanded(
-                              child: RefreshIndicator(
-                                onRefresh: () {
-                                  return refresh();
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
-                                  child: LayoutBuilder(
-                                    builder: (context, constraints) =>
-                                        SingleChildScrollView(
-                                      physics: AlwaysScrollableScrollPhysics(),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: _menuList
-                                              .map((e) => CardMenu(
-                                                    name: e["name"],
-                                                    price: e["price"],
-                                                    url: e["url"],
-                                                    description:
-                                                        e["description"],
-                                                    callback: () {
-                                                      int id = e["id"];
-                                                      print("pressed" +
-                                                          id.toString());
-                                                      _showModalMenu();
-                                                    },
-                                                  ))
-                                              .toList()),
+                      Column(
+                        children: [
+                          TabBar(
+                            unselectedLabelColor: Colors.black,
+                            labelColor: Colors.red,
+                            controller: _tabController,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            isScrollable: true,
+                            tabs: _tabList.length <= 0
+                                ? []
+                                : _tabList
+                                    .map((e) => Tab(
+                                          text: e["name"].toString(),
+                                        ))
+                                    .toList(),
+                          ),
+                          isLoadingMenu
+                              ? Expanded(
+                                  child: PageLoading(
+                                  text: "Mengambil Data Menu...",
+                                ))
+                              : Expanded(
+                                  child: RefreshIndicator(
+                                    onRefresh: () {
+                                      return refresh();
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: double.infinity,
+                                      padding: EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 10,
+                                        bottom: isCartAvailable ? 130 : 10,
+                                      ),
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) =>
+                                            SingleChildScrollView(
+                                          physics:
+                                              AlwaysScrollableScrollPhysics(),
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: _menuList
+                                                  .map((e) => CardMenu(
+                                                        name: e["name"],
+                                                        price: e["price"],
+                                                        url: e["url"],
+                                                        description:
+                                                            e["description"],
+                                                        callback: () {
+                                                          int id = e["id"];
+                                                          print("pressed" +
+                                                              id.toString());
+                                                          _showModalMenu(id);
+                                                        },
+                                                      ))
+                                                  .toList()),
+                                        ),
+                                      ),
                                     ),
                                   ),
+                                )
+                        ],
+                      ),
+                      isCartAvailable
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.brown),
                                 ),
                               ),
                             )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -189,14 +222,55 @@ class _OrderViewState extends State<OrderView>
 
   refresh() async {
     _getMenuByCategory();
+    _getAvailableCart();
   }
 
-  void _showModalMenu() {
+  void _addToCart(int id, BuildContext modalContext) {
+    Map<String, dynamic> _data = {
+      "menu": id,
+      "qty": qty,
+      "description": addition
+    };
+    addToCart(_data, (message) {
+      print(message);
+      Navigator.pop(modalContext);
+      _getAvailableCart();
+    }, (message) {
+      print(message);
+    });
+  }
+
+  void _getAvailableCart() async {
+    List<dynamic> _data = await listAvailableCart();
+    int _cartCount = _data.length;
+    if (_cartCount > 0) {
+      setState(() {
+        isCartAvailable = true;
+      });
+    }else {
+      isCartAvailable = false;
+    }
+    print(_data);
+  }
+
+  void _showModalMenu(int id) async {
+    Map<String, dynamic> _data = await getMenyById(id);
+    String url = _data["gambar"] != null
+        ? (_data["gambar"] != ''
+            ? _data["gambar"].toString()
+            : "/assets/icon/logo.png")
+        : "/assets/icon/logo.png";
+    String name = _data["nama"].toString();
+    int price = _data["harga"] as int;
+    String description =
+        _data["deskripsi"] != null ? _data["deskripsi"].toString() : '';
+    print(_data);
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return new Container(
+          return Container(
             height: MediaQuery.of(context).size.height * 0.6,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -204,16 +278,60 @@ class _OrderViewState extends State<OrderView>
                 topRight: Radius.circular(10),
               ),
             ),
-            child: Container(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 10,
-                  decoration: BoxDecoration(color: Colors.brown),
+            child: Stack(
+              children: [
+                DetailOrderComponent(
+                  url: url,
+                  name: name,
+                  price: price,
+                  description: description,
+                  textEditingController: _textEditingController,
+                  onAdd: () {
+                    setState(() {
+                      qty += 1;
+                    });
+                    _textEditingController.text = qty.toString();
+                  },
+                  onMin: () {
+                    if (qty > 0) {
+                      setState(() {
+                        qty -= 1;
+                      });
+                      _textEditingController.text = qty.toString();
+                    }
+                  },
+                  textAdditionController: _textAdditionController,
+                  onAdditon: (text) {
+                    setState(() {
+                      addition = text;
+                    });
+                    print(addition);
+                  },
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    onTap: () {
+                      _addToCart(id, context);
+                    },
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.brown),
+                      child: Center(
+                        child: Text(
+                          "Tambah Keranjang",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
           );
         });

@@ -19,7 +19,7 @@ Future<List<dynamic>> getMenuByCategory(int id) async {
   return _results;
 }
 
-Future<Map<String, dynamic>> GetMenyById(int id) async {
+Future<Map<String, dynamic>> getMenyById(int id) async {
   Map<String, dynamic> _data = {};
   String url = '$HostAddress/menu/detail/$id';
   try {

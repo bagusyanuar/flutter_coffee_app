@@ -4,6 +4,7 @@ import 'package:flutter_coffee_app/view/dashboard.dart';
 import 'package:flutter_coffee_app/view/login.dart';
 import 'package:flutter_coffee_app/view/order.dart';
 import 'package:flutter_coffee_app/view/splash.dart';
+import 'package:flutter_coffee_app/view/transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => Dashboard(),
         '/order': (context) => OrderView(),
         '/cart': (context) => CartView(),
+        '/transaction': (context) => TransactionView(),
       },
     );
   }

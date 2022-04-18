@@ -35,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
                 ButtonMenu(
                   url: "assets/invoice.png",
                   name: "Tagihan",
-                  redirect: "/invoice",
+                  redirect: "/transaction",
                 ),
               ],
             )),

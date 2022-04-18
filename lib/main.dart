@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_coffee_app/view/cart.dart';
 import 'package:flutter_coffee_app/view/dashboard.dart';
 import 'package:flutter_coffee_app/view/login.dart';
 import 'package:flutter_coffee_app/view/order.dart';
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginView(),
         '/dashboard': (context) => Dashboard(),
-        '/order': (context) => OrderView()
+        '/order': (context) => OrderView(),
+        '/cart': (context) => CartView(),
       },
     );
   }

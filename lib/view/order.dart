@@ -25,6 +25,7 @@ class _OrderViewState extends State<OrderView>
   List<Map<String, dynamic>> _tabList = [];
   List<Map<String, dynamic>> _menuList = [];
   int qty = 0;
+  int subTotal = 0;
   TextEditingController _textEditingController = TextEditingController()
     ..text = '0';
   TextEditingController _textAdditionController = TextEditingController()
@@ -34,6 +35,7 @@ class _OrderViewState extends State<OrderView>
   void initState() {
     // TODO: implement initState
     _getCategories();
+    _getAvailableCart();
     super.initState();
   }
 
@@ -131,16 +133,72 @@ class _OrderViewState extends State<OrderView>
                         ],
                       ),
                       isCartAvailable
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.brown),
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, "/cart");
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 5),
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.brown),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 90,
+                                          width: 90,
+                                          margin: EdgeInsets.only(right: 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white54,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            image: DecorationImage(
+                                              image:
+                                                  AssetImage("assets/logo.png"),
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Sub Total Pembelian :",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                "IDR " + subTotal.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.orange,
+                                                    fontSize: 24,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             )
@@ -244,10 +302,15 @@ class _OrderViewState extends State<OrderView>
     List<dynamic> _data = await listAvailableCart();
     int _cartCount = _data.length;
     if (_cartCount > 0) {
+      int _tmpSubTotal = 0;
+      _data.forEach((element) {
+        _tmpSubTotal += element["total"] as int;
+      });
       setState(() {
         isCartAvailable = true;
+        subTotal = _tmpSubTotal;
       });
-    }else {
+    } else {
       isCartAvailable = false;
     }
     print(_data);

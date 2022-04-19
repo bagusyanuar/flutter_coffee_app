@@ -3,12 +3,14 @@ import 'package:flutter_coffee_app/component/page-loading.dart';
 import 'package:flutter_coffee_app/component/transaction-item.dart';
 import 'package:flutter_coffee_app/controller/transaction.dart';
 
-class TransactionView extends StatefulWidget {
+class TransactionFinsihView extends StatefulWidget {
+  const TransactionFinsihView({ Key? key }) : super(key: key);
+
   @override
-  _TransactionViewState createState() => _TransactionViewState();
+  _TransactionFinsihViewState createState() => _TransactionFinsihViewState();
 }
 
-class _TransactionViewState extends State<TransactionView> {
+class _TransactionFinsihViewState extends State<TransactionFinsihView> {
   bool isLoading = true;
   List<dynamic> transactionList = [];
 
@@ -18,7 +20,6 @@ class _TransactionViewState extends State<TransactionView> {
     _getListTransaction();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +50,7 @@ class _TransactionViewState extends State<TransactionView> {
                   ),
                   Expanded(
                     child: Text(
-                      "Pesanan Menunggu",
+                      "Pesanan Selesai",
                       style: TextStyle(
                           color: Colors.brown,
                           fontSize: 20,
@@ -79,7 +80,7 @@ class _TransactionViewState extends State<TransactionView> {
                                 .map((e) => TransactionItem(
                                       customer: e["customer"].toString(),
                                       total: e["total"] as int,
-                                      status: "Menunggu",
+                                      status: "Selesai",
                                       id: e["id"] as int,
                                     ))
                                 .toList(),
@@ -102,7 +103,7 @@ class _TransactionViewState extends State<TransactionView> {
     setState(() {
       isLoading = true;
     });
-    List<dynamic> _data = await listTransaction(0);
+    List<dynamic> _data = await listTransaction(1);
     print(_data);
     setState(() {
       transactionList = _data;

@@ -19,26 +19,36 @@ class _DashboardState extends State<Dashboard> {
             color: Colors.black,
           ),
           Expanded(
-            child: Center(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ButtonMenu(
-                  url: "assets/order.png",
-                  name: "Pesanan Baru",
-                  redirect: "/order",
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                ButtonMenu(
-                  url: "assets/invoice.png",
-                  name: "Tagihan",
-                  redirect: "/transaction",
-                ),
-              ],
-            )),
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ButtonMenu(
+                    url: "assets/order.png",
+                    name: "Pesanan Baru",
+                    redirect: "/order",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ButtonMenu(
+                    url: "assets/waiting-order.png",
+                    name: "Pesanan Menunggu",
+                    redirect: "/waiting-order",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ButtonMenu(
+                    url: "assets/invoice.png",
+                    name: "Pesanan Selesai",
+                    redirect: "/finish-order",
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

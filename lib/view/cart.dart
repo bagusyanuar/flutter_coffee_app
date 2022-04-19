@@ -209,7 +209,7 @@ class _CartViewState extends State<CartView> {
     
     checkoutCart(_data, (message) {
       Navigator.pushNamedAndRemoveUntil(
-        rootContext, "/transaction", ModalRoute.withName("/dashboard"));
+        rootContext, "/waiting-order", ModalRoute.withName("/dashboard"));
       print(message);
     }, (message) {
       print(message);

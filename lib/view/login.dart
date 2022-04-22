@@ -9,6 +9,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   String username = "";
   String password = "";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,14 +78,29 @@ class _LoginViewState extends State<LoginView> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.brown),
-                    child: Center(
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        isLoading
+                            ? Container(
+                                height: 20,
+                                width: 20,
+                                margin: EdgeInsets.only(right: 5),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Container(),
+                        Text(
+                          "Login",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -96,10 +112,14 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void _login(BuildContext context) {
+  void _login(BuildContext context) async {
     Map<String, String> _data = {"username": username, "password": password};
-    // Login(_data, context);
-    Navigator.pushNamedAndRemoveUntil(
-        context, "/dashboard", ModalRoute.withName("/dashboard"));
+    setState(() {
+      isLoading = true;
+    });
+    await loginHandler(_data, context);
+    setState(() {
+      isLoading = false;
+    });
   }
 }

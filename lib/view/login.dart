@@ -114,6 +114,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _login(BuildContext context) async {
     Map<String, String> _data = {"username": username, "password": password};
+    print(_data);
     setState(() {
       isLoading = true;
     });

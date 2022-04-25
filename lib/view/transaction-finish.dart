@@ -103,7 +103,7 @@ class _TransactionFinsihViewState extends State<TransactionFinsihView> {
     setState(() {
       isLoading = true;
     });
-    List<dynamic> _data = await listTransaction(1);
+    List<dynamic> _data = await listTransaction(2);
     print(_data);
     setState(() {
       transactionList = _data;
